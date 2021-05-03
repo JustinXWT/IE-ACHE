@@ -958,7 +958,7 @@ def handshake():
 		logger.info('Computing shared secret...\n')
 
 		#received BER encoded scalar / element and decoded
-		PKA_encoded= self.connection.recv(1024)
+		PKA_encoded= sock.recv(1024)
 		PKA_decoded = asn1_file.decode('DataPublicKey', PKA_encoded)
 		PKA = PKA_decoded.get('data')
 
