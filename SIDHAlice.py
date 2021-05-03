@@ -984,11 +984,11 @@ class ClientThread(threading.Thread):
             # print ()
             # ap_token = ap.compute_shared_secret(namedtuple_element_sta, int(scalar_sta), other_mac)
 
-			SKA = shared_secret_Alice(n_Alice, PKB, splits_Alice, MAX_Alice)
-			print('')
-			print("Alice's shared secret:")
-			print(SKA)
-			print('')
+		SKA = shared_secret_Alice(n_Alice, PKB, splits_Alice, MAX_Alice)
+		print('')
+		print("Alice's shared secret:")
+		print(SKA)
+		print('')
 
             #Encode ap_token to be BER and send to peer
             SKA_encoded = asn1_file.encode('DataSharedKey',{'data':SKA})
