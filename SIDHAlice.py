@@ -984,11 +984,11 @@ class ClientThread(threading.Thread):
             # print ()
             # ap_token = ap.compute_shared_secret(namedtuple_element_sta, int(scalar_sta), other_mac)
 
-		SKA = shared_secret_Alice(n_Alice, PKB, splits_Alice, MAX_Alice)
-		print('')
-		print("Alice's shared secret:")
-		print(SKA)
-		print('')
+            SKA = shared_secret_Alice(n_Alice, PKB, splits_Alice, MAX_Alice)
+            print('')
+            print("Alice's shared secret:")
+            print(SKA)
+            print('')
 
             #Encode ap_token to be BER and send to peer
             SKA_encoded = asn1_file.encode('DataSharedKey',{'data':SKA})
@@ -1009,12 +1009,12 @@ class ClientThread(threading.Thread):
 
             # PMK_Key = ap.confirm_exchange(PKBShared)
 
-			if SKA==SKB:
-				print('keys are equal :)')
-			else:
-				print('something went wrong :(')
-				if n_Alice % 2 != 0:
-					print("Error: Bob's secret key must be even!")
+            if SKA==SKB:
+                print('keys are equal :)')
+            else:
+                print('something went wrong :(')
+                if n_Alice % 2 != 0:
+                    print("Error: Bob's secret key must be even!")
 
 			# lock.release()
 
@@ -1064,7 +1064,7 @@ def handshake():
             break
         else:
             connection.close()
-			sock.close()
+            #sock.close()
             continue
 
 #######################################################################
@@ -1101,3 +1101,4 @@ print('')
 
 handshake()
 sock.close()
+
