@@ -6,7 +6,6 @@
 # by Costello, Longa, Naehrig (Microsoft Research)
 # 
 
-
 import time
 import hashlib
 import random
@@ -45,7 +44,7 @@ server_address = ('192.168.0.3', 4380)
 while True:
     try:
         sock.connect(server_address)
-		print("Successfully connected to Keygen")
+        print("Successfully connected to Keygen")
         break
     except ConnectionRefusedError as conn_error:
         print('A connection error has occured')
@@ -928,105 +927,88 @@ def handshake():
 		# #Sending BER encoded MAC address to peer
 		# self.connection.send(own_mac_BER)
 
-		print()
-		logger.info('Starting commit exchange...\n')
+        print()
+        logger.info('Starting commit exchange...\n')
 
 		# scalar_ap, element_ap = ap.commit_exchange()
 
 		# #encode scalar_ap / element_ap
 		# scalar_complete = ("\n".join([str(scalar_ap), str(element_ap)]))
-		n_Bob= randint(0,lB**eB)
-		print("Bob's secret key:")
-		print(n_Bob)
-		print('')
+        n_Bob= randint(0,lB**eB)
+        print("Bob's secret key:")
+        print(n_Bob)
+        print('')
 
-		PKB = keygen_Bob(n_Bob, params_Bob, splits_Bob, MAX_Bob)
-		print('')
-		print("Bob's Public Key:")
-		print((PKB[0]))
-		print((PKB[1]))
-		print((PKB[2]))
-		print('')
+        PKB = keygen_Bob(n_Bob, params_Bob, splits_Bob, MAX_Bob)
+        print('')
+        print("Bob's Public Key:")
+        print((PKB[0]))
+        print((PKB[1]))
+        print((PKB[2]))
+        print('')
+        print(math.log(PKB[0]))
 
-		encoded = asn1_file.encode('DataPublicKey',{'data': PKB})
-		sock.sendall(PKB)
-		print('data send', PKB)
+        #encoded = asn1_file.encode('DataPublicKey',{'data': int(PKB[0])})
+        sock.sendall(PKB[0])
+        print('data send', PKB)
 
-		#Send BER encoded scalar / element ap to peer
-		print()
+	#Send BER encoded scalar / element ap to peer
+        print()
+        logger.info('Computing shared secret...\n')
 
-		logger.info('Computing shared secret...\n')
+	#received BER encoded scalar / element and decoded
+        PKA_encoded= sock.recv(1024)
+        PKA_decoded = asn1_file.decode('DataPublicKey', PKA_encoded)
+        PKA = PKA_decoded.get('data')
 
-		#received BER encoded scalar / element and decoded
-		PKA_encoded= sock.recv(1024)
-		PKA_decoded = asn1_file.decode('DataPublicKey', PKA_encoded)
-		PKA = PKA_decoded.get('data')
+        print('Public Key Received', PKA)
 
-		print('Public Key Received', PKA)
+        SKB = shared_secret_Bob(n_Bob, PKA, splits_Bob, MAX_Bob)
+        print('')
+        print("Bob's shared secret:")
+        print(SKB)
+        print('')
+    	
+        #Encode ap_token to be BER and send to peer
+        SKB_encoded = asn1_file.encode('DataSharedKey',{'data':SKB})
+        sock.send(SKB_encoded)
+        
+        # connection.send(ap_token.encode())
+        print("Shared Key being sent across", SKB)
+        print()
+        logger.info('Confirming Exchange...\n')
 
-		# data = scalar_element_ap.split('\n')
-		# print (data[0])
-		# print (data[1])
-		# scalar_sta = data[0]
-		# element_sta = data[1]
-		# print()
-		# print ('scalar_sta recv:',scalar_sta)
-		# print()
-		# print ('element_sta recv:',element_sta)
-		# print ()
-		# print ()
-		# namedtuple_element_sta = eval(element_sta)
-		# print(namedtuple_element_sta.y, namedtuple_element_sta.x)
-		# print ()
-		# print ()
-		# ap_token = ap.compute_shared_secret(namedtuple_element_sta, int(scalar_sta), other_mac)
+        #Received BER encoded STA token and decode it
+        SKA_encoded = sock.recv(1024)
+        SKA_decoded = asn1_file.decode('DataSharedKey', SKA_encoded)
+        SKA = PKBShared_decoded.get('data')
 
-		SKB = shared_secret_Bob(n_Bob, PKA, splits_Bob, MAX_Bob)
-		print('')
-		print("Bob's shared secret:")
-		print(SKB)
-		print('')
+        print('received SKA Shared Key', SKA)
 
-		#Encode ap_token to be BER and send to peer
-		SKB_encoded = asn1_file.encode('DataSharedKey',{'data':SKB})
-		sock.send(SKB_encoded)
+        # PMK_Key = ap.confirm_exchange(PKBShared)
 
-		# connection.send(ap_token.encode())
-		print("Shared Key being sent across", SKB)
+        if SKB==SKA:
+            print('keys are equal :)')
+        else:
+            print('something went wrong :(')
+            if n_Alice % 2 != 0:
+                print("Error: Alice's secret key must be even!")
 
-		print()
-		logger.info('Confirming Exchange...\n')
-
-		#Received BER encoded STA token and decode it
-		SKA_encoded = sock.recv(1024)
-		SKA_decoded = asn1_file.decode('DataSharedKey', SKA_encoded)
-		SKA = PKBShared_decoded.get('data')
-
-		print('received SKA Shared Key', SKA)
-
-		# PMK_Key = ap.confirm_exchange(PKBShared)
-
-		if SKB==SKA:
-			print('keys are equal :)')
-		else:
-			print('something went wrong :(')
-			if n_Alice % 2 != 0:
-				print("Error: Alice's secret key must be even!")
 
 #######################################################################
 
-# n_Bob= randint(0,lB**eB)
-# print("Bob's secret key:")
-# print(n_Bob)
-# print('')
+#n_Bob= randint(0,lB**eB)
+#print("Bob's secret key:")
+#print(n_Bob)
+#print('')
 
-# PKB = keygen_Bob(n_Bob, params_Bob, splits_Bob, MAX_Bob)
-# print('')
-# print("Bob's Public Key:")
-# print((PKB[0]))
-# print((PKB[1]))
-# print((PKB[2]))
-# print('')
+#PKB = keygen_Bob(n_Bob, params_Bob, splits_Bob, MAX_Bob)
+#print('')
+#print("Bob's Public Key:")
+#print((PKB[0]))
+#print((PKB[1]))
+#print((PKB[2]))
+#print('')
 
 # SKB = shared_secret_Bob(n_Bob, PKA, splits_Bob, MAX_Bob)
 # print('')
@@ -1046,3 +1028,4 @@ def handshake():
 
 handshake()
 sock.close()
+
