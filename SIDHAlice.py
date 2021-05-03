@@ -1014,7 +1014,7 @@ class ClientThread(threading.Thread):
 			else:
 				print('something went wrong :(')
 				if n_Alice % 2 != 0:
-					print("Error: Alice's secret key must be even!")
+					print("Error: Bob's secret key must be even!")
 
 			# lock.release()
 
@@ -1064,6 +1064,7 @@ def handshake():
             break
         else:
             connection.close()
+			sock.close()
             continue
 
 #######################################################################
@@ -1097,3 +1098,5 @@ print('')
 # 	print('something went wrong :(')
 # 	if n_Alice % 2 != 0:
 # 		print("Error: Alice's secret key must be even!")
+
+handshake()
