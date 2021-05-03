@@ -45,6 +45,7 @@ server_address = ('192.168.0.3', 4380)
 while True:
     try:
         sock.connect(server_address)
+		print("Successfully connected to Keygen")
         break
     except ConnectionRefusedError as conn_error:
         print('A connection error has occured')
@@ -886,16 +887,6 @@ YPB = 10686693760744079753638500261776672082694467465027140072103951425088918671
 params_Bob = [XPA, XPB, YPB]
 
 #################################################################
-#strategy paramters from MSR
-# splits_Alice = [0, 1, 1, 2, 2, 2, 3, 4, 4, 4, 4, 5, 5, 6, 7, 8, 8, 9, 9, 9, 9, 9, 9, 9, 12, 11,\
-# 12, 12, 13, 14, 15, 16, 16, 16, 16, 16, 16, 17, 17, 18, 18, 17, 21, 17, 18, 21,\
-# 20, 21, 21, 21, 21, 21, 22, 25, 25, 25, 26, 27, 28, 28, 29, 30, 31, 32, 32, 32,\
-# 32, 32, 32, 32, 33, 33, 33, 35, 36, 36, 33, 36, 35, 36, 36, 35, 36, 36, 37, 38,\
-# 38, 39, 40, 41, 42, 38, 39, 40, 41, 42, 40, 46, 42, 43, 46, 46, 46, 46, 48, 48,\
-# 48, 48, 49, 49, 48, 53, 54, 51, 52, 53, 54, 55, 56, 57, 58, 59, 59, 60, 62, 62,\
-# 63, 64, 64, 64, 64, 64, 64, 64, 64, 65, 65, 65, 65, 65, 66, 67, 65, 66, 67, 66,\
-# 69, 70, 66, 67, 66, 69, 70, 69, 70, 70, 71, 72, 71, 72, 72, 74, 74, 75, 72, 72,\
-# 74, 74, 75, 72, 72, 74, 75, 75, 72, 72, 74, 75, 75, 77, 77, 79, 80, 80, 82 ]
 
 splits_Bob = [0, 1, 1, 2, 2, 2, 3, 3, 4, 4, 4, 5, 5, 5, 6, 7, 8, 8, 8, 8, 9, 9, 9, 9, 9, 10,\
 12, 12, 12, 12, 12, 12, 13, 14, 14, 15, 16, 16, 16, 16, 16, 17, 16, 16, 17, 19,\
@@ -910,8 +901,107 @@ splits_Bob = [0, 1, 1, 2, 2, 2, 3, 3, 4, 4, 4, 5, 5, 5, 6, 7, 8, 8, 8, 8, 9, 9, 
 88, 86, 86, 86, 86, 88, 86, 88, 86, 86, 86, 88, 88, 86, 86, 86, 93, 90, 90, 92,\
 92, 92, 93, 93, 93, 93, 93, 97, 97, 97, 97, 97, 97 ]
 
-# MAX_Alice = 185
 MAX_Bob = 239
+
+#######################################################################
+
+def handshake():
+        #Own mac address
+        own_mac = (':'.join(re.findall('..', '%012x' % uuid.getnode())))
+
+        #Encode MAC address with BER
+        own_mac_BER = asn1_file.encode('DataMac', {'data': own_mac})
+
+        print (own_mac)
+        # ap = Peer('abc1238', own_mac, 'AP')
+
+        logger.info('Starting hunting and pecking to derive PE...\n')
+        # print ("Connecting from", client_address)
+
+        with self.connection:
+            # raw_other_mac = self.connection.recv(1024)
+
+            # #decode BER and get MAC address
+            # other_decode_mac = asn1_file.decode('DataMac', raw_other_mac)
+            # other_mac = other_decode_mac.get('data')
+
+            # print ("Other MAC", other_mac)
+
+            # #Sending BER encoded MAC address to peer
+            # self.connection.send(own_mac_BER)
+
+            print()
+            logger.info('Starting commit exchange...\n')
+
+            # scalar_ap, element_ap = ap.commit_exchange()
+
+            # #encode scalar_ap / element_ap
+            # scalar_complete = ("\n".join([str(scalar_ap), str(element_ap)]))
+            encoded = asn1_file.encode('DataPublicKey',{'data': PKB})
+
+            print('data send', PKB)
+
+            #Send BER encoded scalar / element ap to peer
+            self.connection.sendall(encoded)
+            print()
+
+            logger.info('Computing shared secret...\n')
+
+            #received BER encoded scalar / element and decoded
+            PKA_encoded= self.connection.recv(1024)
+            PKA_decoded = asn1_file.decode('DataPublicKey', PKA_encoded)
+            PKA = PKA_decoded.get('data')
+
+            print('Public Key Received', PKA)
+
+            # data = scalar_element_ap.split('\n')
+            # print (data[0])
+            # print (data[1])
+            # scalar_sta = data[0]
+            # element_sta = data[1]
+            # print()
+            # print ('scalar_sta recv:',scalar_sta)
+            # print()
+            # print ('element_sta recv:',element_sta)
+            # print ()
+            # print ()
+            # namedtuple_element_sta = eval(element_sta)
+            # print(namedtuple_element_sta.y, namedtuple_element_sta.x)
+            # print ()
+            # print ()
+            # ap_token = ap.compute_shared_secret(namedtuple_element_sta, int(scalar_sta), other_mac)
+
+			SKB = shared_secret_Bob(n_Bob, PKA, splits_Bob, MAX_Bob)
+			print('')
+			print("Bob's shared secret:")
+			print(SKB)
+			print('')
+
+            #Encode ap_token to be BER and send to peer
+            SKB_encoded = asn1_file.encode('DataSharedKey',{'data':SKB})
+            self.connection.send(SKB_encoded)
+
+            # connection.send(ap_token.encode())
+            print("Shared Key being sent across", SKB)
+
+            print()
+            logger.info('Confirming Exchange...\n')
+
+            #Received BER encoded STA token and decode it
+            SKA_encoded = self.connection.recv(1024)
+            SKA_decoded = asn1_file.decode('DataSharedKey', SKA_encoded)
+            SKA = PKBShared_decoded.get('data')
+
+            print('received SKA Shared Key', SKA)
+
+            # PMK_Key = ap.confirm_exchange(PKBShared)
+
+			if SKB==SKA:
+				print('keys are equal :)')
+			else:
+				print('something went wrong :(')
+				if n_Alice % 2 != 0:
+					print("Error: Alice's secret key must be even!")
 
 #######################################################################
 
@@ -943,3 +1033,6 @@ print('')
 # 	print('something went wrong :(')
 # 	if n_Alice % 2 != 0:
 # 		print("Error: Alice's secret key must be even!")
+
+handshake()
+sock.close()
