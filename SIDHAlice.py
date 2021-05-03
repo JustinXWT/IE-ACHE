@@ -1100,3 +1100,4 @@ print('')
 # 		print("Error: Alice's secret key must be even!")
 
 handshake()
+sock.close()
