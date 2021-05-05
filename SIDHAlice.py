@@ -950,9 +950,15 @@ class ClientThread(threading.Thread):
 
             # #encode scalar_ap / element_ap
             # scalar_complete = ("\n".join([str(scalar_ap), str(element_ap)]))
-            encoded = asn1_file.encode('DataPublicKey',{'data': PKA})
+	    keyreal1 = PKA[0].re
+	    keyimag1 = PKA[0].im
+	    keyreal2 = PKA[1].re
+	    keyimag2 = PKA[1].im
+	    keyreal3 = PKA[2].re
+	    keyimag3 = PKA[2].im
+            encoded = asn1_file.encode('DataPublicKey',{'keyreal1': keyreal1, 'keyimag1': keyimag1, 'keyreal2': keyreal2, 'keyimag2': keyimag2,'keyreal3': keyreal3, 'keyimag3': keyimag3})
 
-            print('data send', PKA)
+            print('data send', PKA[0], PKA[1], PKA[2])
 
             #Send BER encoded scalar / element ap to peer
             self.connection.sendall(encoded)
@@ -961,11 +967,26 @@ class ClientThread(threading.Thread):
             logger.info('Computing shared secret...\n')
 
             #received BER encoded scalar / element and decoded
-            PKB_encoded= self.connection.recv(1024)
+            PKB_encoded = self.connection.recv(2048, socket.MSG_WAITALL)
             PKB_decoded = asn1_file.decode('DataPublicKey', PKB_encoded)
-            PKB = PKB_decoded.get('data')
+	    #retrieving Bob's public key in INT Form
+            keyreal1B = PKB_decoded.get('keyreal1')
+	    keyimag1B = PKB_decoded.get('keyimag1')
+	    keyreal2B = PKB_decoded.get('keyreal2')
+	    keyimag2B = PKB_decoded.get('keyimag2')
+	    keyreal3B = PKB_decoded.get('keyreal3')
+	    keyimag3B = PKB_decoded.get('keyimag3')
+	    #Forming Bob's public key into complex form for calculations
+	    phiPX = complex(keyreal1B, keyimag1B)
+	    phiQX = complex(keyreal2B, keyimag2B)
+	    phiDX = complex(keyreal3B, keyimag3B)
+	    
+	    PKB = [phiPX, phiQX, phiDX]
 
-            print('Public Key Received', PKB)
+            print('Public Key Received: ')
+	    print(PKB[0])
+	    print(PKB[1])
+	    print(PKB[2])
 
             # data = scalar_element_ap.split('\n')
             # print (data[0])
@@ -989,7 +1010,7 @@ class ClientThread(threading.Thread):
             print("Alice's shared secret:")
             print(SKA)
             print('')
-
+		
             #Encode ap_token to be BER and send to peer
             SKA_encoded = asn1_file.encode('DataSharedKey',{'data':SKA})
             self.connection.send(SKA_encoded)
