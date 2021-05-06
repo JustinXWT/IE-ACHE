@@ -951,17 +951,18 @@ class ClientThread(threading.Thread):
             # #encode scalar_ap / element_ap
             # scalar_complete = ("\n".join([str(scalar_ap), str(element_ap)]))
             n_Alice = randint(0,(lA**eA)/2)
-			n_Alice = 2*n_Alice
-			print("Alice's secret key:")
-			print(n_Alice)
-			print('')
-			PKA = keygen_Alice(n_Alice, params_Alice, splits_Alice, MAX_Alice)
-			print('')
-			print("Alice's Public Key:")
-			print((PKA[0]))
-			print((PKA[1]))
-			print((PKA[2]))
-			print('')
+	    n_Alice = 2*n_Alice
+            print("Alice's secret key:")
+            print(n_Alice)
+            print('')
+            PKA = keygen_Alice(n_Alice, params_Alice, splits_Alice, MAX_Alice)
+            print('')
+            print("Alice's Public Key:")
+            print((PKA[0]))
+            print((PKA[1]))
+            print((PKA[2]))
+            print('')
+
 
             keyreal1 = PKA[0].re
             keyimag1 = PKA[0].im
