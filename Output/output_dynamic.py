@@ -1195,7 +1195,7 @@ def handshake(CLIENT1, CLIENT2, CLIENT3, CLIENT4, OPCODE1, OPCODE2, OPCODE3, POS
             o2 = open("opcode2", "w")
             o2.write(OPERATION2)
             o2.close()
-            output_operator2 = encrypting(SKy, OPCODE2)
+            output_operator2 = encrypting(SK, OPCODE2)
             o2 = open("opcode2.hacklab", "rb")
             operator2_read = o2.read()
             cl_op.append(operator2_read)
