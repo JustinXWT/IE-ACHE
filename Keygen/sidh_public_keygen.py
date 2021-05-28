@@ -1015,6 +1015,13 @@ def handshake():
                 #SK = Skeleton Key
                 SK = hashlib.sha256(SKA_StringToBytes).digest()
                 
+                SIDH_stop = time.perf_counter()
+                #writing time takent o generated shared key between keygen and cloud
+                KeyExchangeTimingCloud = open('time.txt', 'a')
+                SIDH_time_total = round((SIDH_stop - SIDH_start), 3)
+                KeyExchangeTimingCloud.write('\nTotal Time Taken to Generate Shared Secret Temporal Key for' + str(connection) + ': ')
+                KeyExchangeTimingCloud.write(str(SIDH_time_total))
+                KeyExchangeTimingCloud.close()
                 
                 print ("Getting keys...\n")
                 print ("Printing cloud key...\n")
@@ -1048,14 +1055,6 @@ def handshake():
                     encoded_keys = asn1_file.encode('DataKey', {'key': keycontent, 'nbit': nbitkeycontent})
                 s.close()
                 t.close()
-                
-                SIDH_stop = time.perf_counter()
-                #writing time takent o generated shared key between keygen and cloud
-                KeyExchangeTimingCloud = open('time.txt', 'a')
-                SIDH_time_total = round((SIDH_stop - SIDH_start), 3)
-                KeyExchangeTimingCloud.write('\nTotal Time Taken to Generate Shared Secret Temporal Key for' + str(connection) + ': ')
-                KeyExchangeTimingCloud.write(str(SIDH_time_total))
-                KeyExchangeTimingCloud.close()
                 
                 print('Original cloud file size: ', os.path.getsize(cloud_key))
                 print ('Encrypted cloud file size: ', os.path.getsize(cloudkey))
