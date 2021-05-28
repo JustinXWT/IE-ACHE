@@ -1093,7 +1093,7 @@ def handshake():
     genKeys_time_stop = time.perf_counter()
     genKeys_Total_time = round((genKeys_time_stop - genKeys_time_start), 3)
     #write time it took to generate keys into file)
-    keyGenTiming = open('time.txt', a')
+    keyGenTiming = open('time.txt', 'a')
     keyGenTiming.write('Time taken to generate public/private keys for HE: ')
     keyGenTiming.write(str(genKeys_Total_time))
     keyGenTiming.write('\n========================================')
