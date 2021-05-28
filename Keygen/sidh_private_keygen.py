@@ -945,14 +945,13 @@ class ClientThread(threading.Thread):
         logger.info("Connection coming from %s", connection)
 
     def run(self):
-
+        
         logger.info('Starting Key Exchange...\n')
-
+        
         with self.connection:
-
+            SIDH_start = time.perf_counter()
             print()
             logger.info('Client found. Key Exchange Begins...\n')
-
             #Calculates Secret and Public Keys
             n_Alice = randint(0,(lA**eA)/2)
             n_Alice = 2*n_Alice
@@ -1021,7 +1020,14 @@ class ClientThread(threading.Thread):
             SKA_StringToBytes = SKA_ComplexToString.encode()
             #SK = Skeleton Key
             SK = hashlib.sha256(SKA_StringToBytes).digest()
-
+            
+            SIDH_stop = time.perf_counter()
+            #writing time taken to generate shared key between keygen and client
+            KeyExchangeTiming = open('SIDHKeyTime.txt', 'a')
+            SIDH_time_total = round((SIDH_stop - SIDH_start), 3)
+            KeyExhangeTiming.write('\nTotal Time Taken to Generate Shared Secret Temporal Key for' + str(connection) + ': ')
+            KeyExchangeTiming.write(str(SIDH_time_total))
+            KeyExchangeTiming.close()
             print ("Getting keys...\n")
             lock.acquire()
 
@@ -1072,7 +1078,8 @@ def handshake():
 
     hostup = int(sum([HOSTUP1, HOSTUP2, HOSTUP3]) + 1)
     position = 1
-
+    
+    
     # Generate keys once only  
     subprocess.call("./keygen")
     
