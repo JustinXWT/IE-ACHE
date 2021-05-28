@@ -1033,7 +1033,7 @@ class ClientThread(threading.Thread):
             #writing time taken to generate shared key between keygen and client
             KeyExchangeTiming = open('time.txt', 'a')
             SIDH_time_total = round((SIDH_stop - SIDH_start), 3)
-            KeyExhangeTiming.write('\nTotal Time Taken to Generate Shared Secret Temporal Key for' + str(connection) + ': ')
+            KeyExchangeTiming.write('\nTotal Time Taken to Generate Shared Secret Temporal Key for' + str(connection) + ': ')
             KeyExchangeTiming.write(str(SIDH_time_total))
             KeyExchangeTiming.close()
             print ("Getting keys...\n")
