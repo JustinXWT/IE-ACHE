@@ -1027,15 +1027,8 @@ class ClientThread(threading.Thread):
             SKA_ComplexToString = secretKeyEncoder().encode(SKA)
             SKA_StringToBytes = SKA_ComplexToString.encode()
             #SK = Skeleton Key
-            SK = hashlib.sha256(SKA_StringToBytes).digest()
-            
-            SIDH_stop = time.perf_counter()
-            #writing time taken to generate shared key between keygen and client
-            KeyExchangeTiming = open('time.txt', 'a')
-            SIDH_time_total = round((SIDH_stop - SIDH_start), 3)
-            KeyExchangeTiming.write('\nTotal Time Taken to Generate Shared Secret Temporal Key for' + str(self.connection) + ': ')
-            KeyExchangeTiming.write(str(SIDH_time_total))
-            KeyExchangeTiming.close()
+            SK = hashlib.sha256(SKA_StringToBytes).digest()            
+         
             print ("Getting keys...\n")
             lock.acquire()
 
@@ -1067,6 +1060,15 @@ class ClientThread(threading.Thread):
                 nbitcontent = t.read(8192)
                 priv_key_BER = asn1_file.encode('DataKey', {'key': keycontent, 'nbit': nbitcontent})
             s.close()
+            
+            SIDH_stop = time.perf_counter()
+            #writing time taken to generate shared key between keygen and client
+            KeyExchangeTiming = open('time.txt', 'a')
+            SIDH_time_total = round((SIDH_stop - SIDH_start), 3)
+            KeyExchangeTiming.write('\nTotal Time Taken to Generate Shared Secret Temporal Key for' + str(self.clientAddr) + ': ')
+            KeyExchangeTiming.write(str(SIDH_time_total))
+            KeyExchangeTiming.close()
+            
             print('Original secret key file size: ', os.path.getsize(secret_key))
             print ('Encrypted secret key file size: ', os.path.getsize(output_secret_key))
             os.system("md5sum secret.key")
