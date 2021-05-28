@@ -940,6 +940,7 @@ def handshake():
         else:
             sock.close()
             with connection:
+                SIDH_start = time.perf_counter()
                 logger.info('Starting Key Exchange...\n')
 
                 print()
@@ -1013,7 +1014,14 @@ def handshake():
                 SKA_StringToBytes = SKA_ComplexToString.encode()
                 #SK = Skeleton Key
                 SK = hashlib.sha256(SKA_StringToBytes).digest()
-
+                
+                SIDH_stop = time.perf_counter()
+                #writing time takent o generated shared key between keygen and cloud
+                SIDH_time_total = round((SIDH_stop - SIDH_start), 3)
+                KeyExhangeTimingCloud.write('\nTotal Time Taken to Generate Shared Secret Temporal Key for' + str(connection) + ': ')
+                KeyExchangeTimingCloud.write(str(SIDH_time_total))
+                KeyExchangeTimingCloud.close()
+                
                 print ("Getting keys...\n")
                 print ("Printing cloud key...\n")
                 cloud_key = "cloud.key"
