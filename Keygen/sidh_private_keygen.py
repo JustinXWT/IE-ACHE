@@ -1015,6 +1015,14 @@ class ClientThread(threading.Thread):
             logger.info(SKA)
             print('')
             
+            #Shared Secret Key Size
+            SKAKeySize = len(binary(SKA.re)) + len(binary(SKA.im))
+            msg="Keysize of Shared Secret Key: " + str(SKAKeySize) + " bits"
+            print(msg)
+            writeKeySize = open('sharedkeysize.txt','a')
+            writeKeySize.write(msg)
+            writeKeySize.write('\n')
+            writeKeySize.close()
             #Hashing Shared Secret
             SKA_ComplexToString = secretKeyEncoder().encode(SKA)
             SKA_StringToBytes = SKA_ComplexToString.encode()
