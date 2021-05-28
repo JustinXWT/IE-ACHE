@@ -1023,7 +1023,7 @@ class ClientThread(threading.Thread):
             
             SIDH_stop = time.perf_counter()
             #writing time taken to generate shared key between keygen and client
-            KeyExchangeTiming = open('SIDHKeyTime.txt', 'a')
+            KeyExchangeTiming = open('time.txt', 'a')
             SIDH_time_total = round((SIDH_stop - SIDH_start), 3)
             KeyExhangeTiming.write('\nTotal Time Taken to Generate Shared Secret Temporal Key for' + str(connection) + ': ')
             KeyExchangeTiming.write(str(SIDH_time_total))
@@ -1079,9 +1079,17 @@ def handshake():
     hostup = int(sum([HOSTUP1, HOSTUP2, HOSTUP3]) + 1)
     position = 1
     
-    
+    genKeys_time_start = time.perf_counter()
     # Generate keys once only  
     subprocess.call("./keygen")
+    genKeys_time_stop = time.perf_counter()
+    genKeys_Total_time = round((genKeys_time_stop - genKeys_time_start), 3)
+    #write time it took to generate keys into file)
+    keyGenTiming = open('time.txt', a')
+    keyGenTiming.write('Time taken to generate public/private keys for HE: ')
+    keyGenTiming.write(str(genKeys_Total_time))
+    keyGenTiming.write('\n========================================')
+    keyGenTiming.close()
     
     while True:
         sock.listen()
