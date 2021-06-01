@@ -1028,13 +1028,6 @@ class ClientThread(threading.Thread):
             SKA_StringToBytes = SKA_ComplexToString.encode()
             #SK = Skeleton Key
             SK = hashlib.sha256(SKA_StringToBytes).digest()
-            SKKeySize = len(binary(SK))
-            msg="Keysize of Hashed Temporal Master Key: " + str(SKKeySize) + " bits"
-            print(msg)
-            writeKeySize = open('sharedkeysize.txt','a')
-            writeKeySize.write(msg)
-            writeKeySize.write('\n')
-            writeKeySize.close()
             SIDH_stop = time.perf_counter()
             #writing time taken to generate shared key between keygen and client
             KeyExchangeTiming = open('time.txt', 'a')
