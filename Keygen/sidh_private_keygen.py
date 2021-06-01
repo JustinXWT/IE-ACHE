@@ -938,9 +938,10 @@ def encrypting(key, filename):
 
 #Handles connections received from Clients
 class ClientThread(threading.Thread):
-    def __init__(self,connection,clientAddr):
+    def __init__(self,connection,clientAddr, SIDH_start):
         threading.Thread.__init__(self)
         self.clientAddr = clientAddr
+        self.SIDH_start = SIDH_start
         self.connection = connection
         logger.info("Connection coming from %s", connection)
 
@@ -949,7 +950,6 @@ class ClientThread(threading.Thread):
         logger.info('Starting Key Exchange...\n')
         
         with self.connection:
-            SIDH_start = time.perf_counter()
             print()
             logger.info('Client found. Key Exchange Begins...\n')
             #Calculates Secret and Public Keys
@@ -1038,7 +1038,7 @@ class ClientThread(threading.Thread):
             SIDH_stop = time.perf_counter()
             #writing time taken to generate shared key between keygen and client
             KeyExchangeTiming = open('time.txt', 'a')
-            SIDH_time_total = round((SIDH_stop - SIDH_start), 3)
+            SIDH_time_total = round((SIDH_stop - self.SIDH_start), 3)
             KeyExchangeTiming.write('\nTotal Time Taken to Generate Shared Secret Temporal Key for' + str(self.connection) + ': ')
             KeyExchangeTiming.write(str(SIDH_time_total))
             KeyExchangeTiming.close()
@@ -1106,16 +1106,17 @@ def handshake():
     keyGenTiming.close()
     
     while True:
+        SIDH_start = time.perf_counter()
         sock.listen()
         connection, client_address = sock.accept()
         threading_name = str(hostup)
         if (client_address[0]) == "192.168.0.4" and position == 1:
-            newThread = ClientThread(connection, client_address)
+            newThread = ClientThread(connection, client_address, SIDH_start)
             newThread.start()
             hostup -= 1
             position = 0
         elif hostup != 0 and position == 0 and (client_address[0]) != "192.168.0.1":
-            newThread = ClientThread(connection, client_address)
+            newThread = ClientThread(connection, client_address, SIDH_start)
             newThread.start()
             hostup -=1
         elif hostup == 0:
