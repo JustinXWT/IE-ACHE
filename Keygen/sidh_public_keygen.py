@@ -932,6 +932,7 @@ def encrypting(key, filename):
 def handshake():
     while True:
         print("Waiting for cloud")
+        SIDH_start = time.perf_counter()
         sock.listen(1)
         connection, client_address = sock.accept()
         if (client_address[0]) != '192.168.0.1':
@@ -940,7 +941,7 @@ def handshake():
         else:
             sock.close()
             with connection:
-                SIDH_start = time.perf_counter()
+                
                 logger.info('Starting Key Exchange...\n')
 
                 print()
