@@ -56,6 +56,7 @@ int main()
     printf("Computation Time: %lf[sec]\n", get_time);
     FILE* time = fopen("keygenTime.txt","w");
     fprintf(time,"Time Taken to Generate HE Keys in C code: %f\n",get_time);
+    fprintf(time,"=========================================================");
     fclose(time);
      
     return 0; // status code 0 -- success
