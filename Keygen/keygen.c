@@ -54,7 +54,7 @@ int main()
     gettimeofday(&end, NULL);
     get_time = (end.tv_sec - start.tv_sec) + (end.tv_usec - start.tv_usec) * 1.0E-6;
     printf("Computation Time: %lf[sec]\n", get_time);
-    FILE* time = fopen("Time.txt","w");
+    FILE* time = fopen("keygenTime.txt","w");
     fprintf(time,"Time Taken to Generate HE Keys in C code: %f\n",get_time);
     fclose(time);
      
