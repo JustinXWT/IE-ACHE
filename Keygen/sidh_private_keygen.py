@@ -1067,6 +1067,14 @@ class ClientThread(threading.Thread):
                 nbitcontent = t.read(8192)
                 priv_key_BER = asn1_file.encode('DataKey', {'key': keycontent, 'nbit': nbitcontent})
             s.close()
+            t.close()
+            print('Original secret key file size: ', os.path.getsize(secret_key))
+            print ('Encrypted secret key file size: ', os.path.getsize(output_secret_key))
+            os.system("md5sum secret.key")
+
+            print('Original nbit key file size: ', os.path.getsize(nbit_key))
+            print ('Encrypted nbit key file size: ', os.path.getsize(output_nbit_key))
+            os.system("md5sum nbit.key")
             message_encode = self.connection.recv(1024)
             message = message_encode.decode()
             if (message == "decrypted"):
@@ -1079,14 +1087,6 @@ class ClientThread(threading.Thread):
                 KeyExchangeTiming.close()
             else:
                 None
-            print('Original secret key file size: ', os.path.getsize(secret_key))
-            print ('Encrypted secret key file size: ', os.path.getsize(output_secret_key))
-            os.system("md5sum secret.key")
-
-            print('Original nbit key file size: ', os.path.getsize(nbit_key))
-            print ('Encrypted nbit key file size: ', os.path.getsize(output_nbit_key))
-            os.system("md5sum nbit.key")
-
             lock.release()
 
 #######################################################################
