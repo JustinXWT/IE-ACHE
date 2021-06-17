@@ -1057,6 +1057,8 @@ def handshake():
                     encoded_keys = asn1_file.encode('DataKey', {'key': keycontent, 'nbit': nbitkeycontent})
                 s.close()
                 t.close()
+                message_encode = self.connection.recv(1024)
+                message = message_encode.decode()
                 if (message == "decrypted"):
                     encryptDecrypt_stop = time.perf_counter()
                     #writing time taken to generate shared key between keygen and client
@@ -1081,4 +1083,4 @@ def handshake():
 
 if __name__ == '__main__':
     handshake()
-    
+    sock.close()
