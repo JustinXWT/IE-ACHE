@@ -1057,19 +1057,15 @@ def handshake():
                     encoded_keys = asn1_file.encode('DataKey', {'key': keycontent, 'nbit': nbitkeycontent})
                 s.close()
                 t.close()
-                message_encode = self.connection.recv(1024)
-                message = message_encode.decode()
-                if (message == "decrypted"):
-                    encryptDecrypt_stop = time.perf_counter()
-                    #writing time taken to generate shared key between keygen and client
-                    KeyExchangeTiming = open('time.txt', 'a')
-                    encryptDecrypt_time_total = round((encryptDecrypt_stop - encryptDecrypt_start), 3)
-                    KeyExchangeTiming.write('\nTotal Time Taken to Encryption/Decryption of keys for' + str(self.connection) + ': ')
-                    KeyExchangeTiming.write(str(encryptDecrypt_time_total))
-                    KeyExchangeTiming.write(str("============================================================"))
-                    KeyExchangeTiming.close()
-                else:
-                    None
+                
+                encryptDecrypt_stop = time.perf_counter()
+                #writing time taken to generate shared key between keygen and client
+                KeyExchangeTiming = open('time.txt', 'a')
+                encryptDecrypt_time_total = round((encryptDecrypt_stop - encryptDecrypt_start), 3)
+                KeyExchangeTiming.write('\nTotal Time Taken to Encryption/Decryption of keys for' + str(self.connection) + ': ')
+                KeyExchangeTiming.write(str(encryptDecrypt_time_total))
+                KeyExchangeTiming.write(str("============================================================"))
+                KeyExchangeTiming.close()   
                 print('Original cloud file size: ', os.path.getsize(cloud_key))
                 print ('Encrypted cloud file size: ', os.path.getsize(cloudkey))
                 os.system("md5sum cloud.key")
