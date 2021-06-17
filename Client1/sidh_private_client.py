@@ -1039,7 +1039,10 @@ def handshake():
         decrypted_nbit_key = decrypting(SK, 'nbit.key.hacklab')
         print('Acquired original nbit key file size: ', os.path.getsize(decrypted_nbit_key))
         os.system("md5sum nbit.key")
-
+        
+        message = "decrypted"
+        sock.sendall(message.encode())
+ 
 #######################################################################
 
 if __name__ == '__main__':
