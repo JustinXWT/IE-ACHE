@@ -59,7 +59,7 @@ int main()
     //time taken for all keys
     get_time2 = (end2.tv_sec - start.tv_sec) + (end2.tv_usec - start.tv_usec) * 1.0E-6;
     printf("Computation Time: %lf[sec]\n", get_time);
-    FILE* time = fopen("keygenTime.txt","w");
+    FILE* time = fopen("keygenTime.txt","a");
     fprintf(time,"Time Taken to Generate HE Keys in C code: %f\n",get_time);
     fprintf(time,"Time Taken to Generate HE Keys with N-bit key in C code: %f\n",get_time2);
     fprintf(time,"=========================================================");
