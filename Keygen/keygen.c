@@ -16,6 +16,7 @@ int main()
 {
    struct timeval start, end;
    double get_time;
+   double get_time2;
    gettimeofday(&start, NULL);
    
    // generate a keyset
