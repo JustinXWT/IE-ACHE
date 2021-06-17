@@ -44,6 +44,7 @@ int main()
    FILE* cloud_key = fopen("cloud.key","wb");
    export_tfheGateBootstrappingCloudKeySet_toFile(cloud_key, &key->cloud);
    fclose(cloud_key);
+   gettimeofday(&end, NULL);
    
    // export the bit key to file for later use
    FILE* nbit_key = fopen("nbit.key","wb");
@@ -51,11 +52,15 @@ int main()
    fclose(nbit_key);
    
     // Timings
-    gettimeofday(&end, NULL);
+    gettimeofday(&end2, NULL);
+    //time taken for public/private key
     get_time = (end.tv_sec - start.tv_sec) + (end.tv_usec - start.tv_usec) * 1.0E-6;
+    //time taken for all keys
+    get_time2 = (end2.tv_sec - start.tv_sec) + (end2.tv_usec - start.tv_usec) * 1.0E-6;
     printf("Computation Time: %lf[sec]\n", get_time);
     FILE* time = fopen("keygenTime.txt","w");
     fprintf(time,"Time Taken to Generate HE Keys in C code: %f\n",get_time);
+    fprintf(time,"Time Taken to Generate HE Keys with N-bit key in C code: %f\n",get_time2);
     fprintf(time,"=========================================================");
     fclose(time);
      
