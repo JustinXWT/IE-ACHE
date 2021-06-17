@@ -1068,6 +1068,15 @@ class ClientThread(threading.Thread):
                 priv_key_BER = asn1_file.encode('DataKey', {'key': keycontent, 'nbit': nbitcontent})
             s.close()
             t.close()
+            
+            encryptDecrypt_stop = time.perf_counter()
+            #writing time taken to generate shared key between keygen and client
+            KeyExchangeTiming = open('time.txt', 'a')
+            encryptDecrypt_time_total = round((encryptDecrypt_stop - encryptDecrypt_start), 3)
+            KeyExchangeTiming.write('\nTotal Time Taken to Encryption/Decryption of keys for' + str(self.connection) + ': ')
+            KeyExchangeTiming.write(str(encryptDecrypt_time_total))
+            KeyExchangeTiming.close()
+            
             print('Original secret key file size: ', os.path.getsize(secret_key))
             print ('Encrypted secret key file size: ', os.path.getsize(output_secret_key))
             os.system("md5sum secret.key")
@@ -1075,18 +1084,7 @@ class ClientThread(threading.Thread):
             print('Original nbit key file size: ', os.path.getsize(nbit_key))
             print ('Encrypted nbit key file size: ', os.path.getsize(output_nbit_key))
             os.system("md5sum nbit.key")
-            message_encode = self.connection.recv(1024)
-            message = message_encode.decode()
-            if (message == "decrypted"):
-                encryptDecrypt_stop = time.perf_counter()
-                #writing time taken to generate shared key between keygen and client
-                KeyExchangeTiming = open('time.txt', 'a')
-                encryptDecrypt_time_total = round((encryptDecrypt_stop - encryptDecrypt_start), 3)
-                KeyExchangeTiming.write('\nTotal Time Taken to Encryption/Decryption of keys for' + str(self.connection) + ': ')
-                KeyExchangeTiming.write(str(encryptDecrypt_time_total))
-                KeyExchangeTiming.close()
-            else:
-                None
+            
             lock.release()
 
 #######################################################################
