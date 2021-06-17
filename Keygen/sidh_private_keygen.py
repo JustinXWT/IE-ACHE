@@ -1067,7 +1067,7 @@ class ClientThread(threading.Thread):
                 nbitcontent = t.read(8192)
                 priv_key_BER = asn1_file.encode('DataKey', {'key': keycontent, 'nbit': nbitcontent})
             s.close()
-            message_encode = self.connection.receive(1024)
+            message_encode = self.connection.recv(1024)
             message = message_encode.decode()
             if (message == "decrypted"):
                 encryptDecrypt_stop = time.perf_counter()
