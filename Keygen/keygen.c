@@ -14,7 +14,7 @@ ifstream read;
 
 int main()
 {
-   struct timeval start, end;
+   struct timeval start, end, end2;
    double get_time;
    double get_time2;
    gettimeofday(&start, NULL);
