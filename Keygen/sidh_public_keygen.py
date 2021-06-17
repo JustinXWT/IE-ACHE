@@ -1062,7 +1062,7 @@ def handshake():
                 #writing time taken to generate shared key between keygen and client
                 KeyExchangeTiming = open('time.txt', 'a')
                 encryptDecrypt_time_total = round((encryptDecrypt_stop - encryptDecrypt_start), 3)
-                KeyExchangeTiming.write('\nTotal Time Taken to Encryption/Decryption of keys for' + str(self.connection) + ': ')
+                KeyExchangeTiming.write('\nTotal Time Taken to Encryption/Decryption of keys for' + str(connection) + ': ')
                 KeyExchangeTiming.write(str(encryptDecrypt_time_total))
                 KeyExchangeTiming.write(str("============================================================"))
                 KeyExchangeTiming.close()   
