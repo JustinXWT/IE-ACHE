@@ -45,15 +45,15 @@ ip_address = socket.gethostbyname(local_hostname)
 server_address = ('192.168.0.3', 4380)
 
 while True:
-	try:
-		sock.connect(server_address)
-		break
-	except ConnectionRefusedError as conn_error:
-		print("Attempting to connect to server...")
-		time.sleep(5)
-	except:
-		# print("Unexpected error", sys.exc_info()[0])
-		continue
+    try:
+        sock.connect(server_address)
+        break
+    except ConnectionRefusedError as conn_error:
+        print("Attempting to connect to server...")
+        time.sleep(5)
+    except:
+        # print("Unexpected error", sys.exc_info()[0])
+        continue
 
 print ("Connecting to %s (%s) with %s" % (local_hostname, local_fqdn, ip_address))
 
@@ -1035,12 +1035,12 @@ def handshake():
         decrypted_nbit_key = decrypting(SK, 'nbit.key.hacklab')
         print('Acquired original nbit key file size: ', os.path.getsize(decrypted_nbit_key))
         os.system("md5sum nbit.key")
-	
-	message = "decrypted"
+    
+        message = "decrypted"
         sock.sendall(message.encode())
 
 #######################################################################
 
 if __name__ == '__main__':
-	handshake()
-	sock.close()
+    handshake()
+    sock.close()
