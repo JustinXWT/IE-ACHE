@@ -1086,17 +1086,17 @@ def handshake():
     hostup = int(sum([HOSTUP1, HOSTUP2, HOSTUP3]) + 1)
     position = 1
     
-    genKeys_time_start = time.perf_counter()
+    #genKeys_time_start = time.perf_counter()
     # Generate keys once only  
     subprocess.call("./keygen")
-    genKeys_time_stop = time.perf_counter()
-    genKeys_Total_time = round((genKeys_time_stop - genKeys_time_start), 3)
+    #genKeys_time_stop = time.perf_counter()
+    #genKeys_Total_time = round((genKeys_time_stop - genKeys_time_start), 3)
     #write time it took to generate keys into file)
-    keyGenTiming = open('time.txt', 'a')
-    keyGenTiming.write('\nTime taken to generate public/private keys for HE: ')
-    keyGenTiming.write(str(genKeys_Total_time))
-    keyGenTiming.write('\n========================================')
-    keyGenTiming.close()
+    #keyGenTiming = open('time.txt', 'a')
+    #keyGenTiming.write('\nTime taken to generate public/private keys for HE: ')
+    #keyGenTiming.write(str(genKeys_Total_time))
+    #keyGenTiming.write('\n========================================')
+    #keyGenTiming.close()
     
     while True:
         SIDH_start = time.perf_counter()
