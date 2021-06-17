@@ -1037,7 +1037,8 @@ class ClientThread(threading.Thread):
             KeyExchangeTiming.close()
             print ("Getting keys...\n")
             lock.acquire()
-
+            
+            encryptDecrypt_start = time.perf_counter()
             print("Printing secret key...\n")
             secret_key = "secret.key"
 
@@ -1058,7 +1059,7 @@ class ClientThread(threading.Thread):
 
             #Encode key in BER format
             priv_key_BER = asn1_file.encode('DataKey', {'key': keycontent, 'nbit': nbitcontent})
-
+            
             # Send the BER encoded file to the peer
             while (keycontent and nbitcontent):
                 self.connection.sendall(priv_key_BER)
@@ -1066,6 +1067,19 @@ class ClientThread(threading.Thread):
                 nbitcontent = t.read(8192)
                 priv_key_BER = asn1_file.encode('DataKey', {'key': keycontent, 'nbit': nbitcontent})
             s.close()
+            message_encode = self.connection.receive(1024)
+            message = message_encode.decode()
+            if (message == "decrypted"):
+                encryptDecrypt_stop = time.perf_counter()
+                #writing time taken to generate shared key between keygen and client
+                KeyExchangeTiming = open('time.txt', 'a')
+                encryptDecrypt_time_total = round((encryptDecrypt_stop - encryptDecrypt_start), 3)
+                KeyExchangeTiming.write('\nTotal Time Taken to Encryption/Decryption of keys for' + str(self.connection) + ': ')
+                KeyExchangeTiming.write(str(encryptDecrypt_time_total))
+                KeyExchangeTiming.write(str("============================================================"))
+                KeyExchangeTiming.close()
+            else:
+                None
             print('Original secret key file size: ', os.path.getsize(secret_key))
             print ('Encrypted secret key file size: ', os.path.getsize(output_secret_key))
             os.system("md5sum secret.key")
