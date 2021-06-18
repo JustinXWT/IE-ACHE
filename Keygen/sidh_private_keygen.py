@@ -1075,7 +1075,7 @@ class ClientThread(threading.Thread):
             encrypt_time_total = round((encrypt_stop - encrypt_start), 3)
             KeyExchangeTiming.write('\nTotal Time Taken to Encryption/Decryption of keys for' + str(self.connection) + ': ')
             KeyExchangeTiming.write(str(encrypt_time_total))
-            KeyExchangeTiming.write(str('--------------------------------------------------'))
+            KeyExchangeTiming.write(str('\n============================='))
             KeyExchangeTiming.close()
             
             print('Original secret key file size: ', os.path.getsize(secret_key))
