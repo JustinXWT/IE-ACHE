@@ -1064,7 +1064,7 @@ def handshake():
                 encryptDecrypt_time_total = round((encryptDecrypt_stop - encryptDecrypt_start), 3)
                 KeyExchangeTiming.write('\nTotal Time Taken to Encryption/Decryption of keys:')
                 KeyExchangeTiming.write(str(encryptDecrypt_time_total))
-                KeyExchangeTiming.write(str("============================================================"))
+                KeyExchangeTiming.write(str("\n============================================================"))
                 KeyExchangeTiming.close()   
                 print('Original cloud file size: ', os.path.getsize(cloud_key))
                 print ('Encrypted cloud file size: ', os.path.getsize(cloudkey))
