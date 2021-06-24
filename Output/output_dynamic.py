@@ -41,6 +41,7 @@ def generateMd5(file_name):
 
     
 def sidh():
+    start = time.perf_counter()
     # Request Keygen to initiate SIDH
     print("Starting Supersingular Isogeny Key Exchange ")
 
@@ -1439,7 +1440,6 @@ own_ipaddr = '192.168.0.4'
 own_address_kg = (own_ipaddr, 4380)
 
 print("Hello!")
-start = time.perf_counter()
 x = 1
 while (x != 0):
     expr = input("Enter an expression using letters (A, B, C) for clients and symbols ( +, -, *) for operators. [E.g. A + B * C]: ")
