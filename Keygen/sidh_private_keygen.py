@@ -1039,6 +1039,13 @@ class ClientThread(threading.Thread):
             lock.acquire()
             
             encrypt_start = time.perf_counter()
+            
+            transitionDelay = open('delay.txt', 'a')
+            delay_time_total = round((encrypt_start - SIDH_stop), 3)
+            transitionDelay.write('\nTransition Delay between shared session and encryption' + str(self.connection) + ': ')
+            transitionDelay.write(str(delay_time_total))
+            transitionDelay.close()
+            
             print("Printing secret key...\n")
             secret_key = "secret.key"
 
@@ -1050,6 +1057,8 @@ class ClientThread(threading.Thread):
 
             output_nbit_key = encrypting(SK, nbit_key)
             print("This file", output_nbit_key, "is encrypted nbit key\n")
+            
+            encrypt_stop = time.perf_counter()
 
             s = open(output_secret_key, "rb")
             keycontent = s.read(8192)
@@ -1069,14 +1078,21 @@ class ClientThread(threading.Thread):
             s.close()
             t.close()
             
-            encrypt_stop = time.perf_counter()
-            #writing time taken to generate shared key between keygen and client
-            KeyExchangeTiming = open('time.txt', 'a')
+            #end of sending encrypted keys to peer
+            transmission_encrypt_stop = time.perf_counter()
+            
+            #writing time taken to encrypt and send encrypted keys
+            transmitEncryptTime = open('encryptTime.txt', 'a')
             encrypt_time_total = round((encrypt_stop - encrypt_start), 3)
-            KeyExchangeTiming.write('\nTotal Time Taken to Encryption/Decryption of keys for' + str(self.connection) + ': ')
-            KeyExchangeTiming.write(str(encrypt_time_total))
-            KeyExchangeTiming.write(str('\n============================='))
-            KeyExchangeTiming.close()
+            transmit_total = round((transmission_encrypt_stop - encrypt_stop), 3)
+            transmitEncryptTime.write('\nTotal Time Taken to Encryption of keys for' + str(self.connection) + ': ')
+            transmitEncryptTime.write(str(encrypt_time_total))
+            transmitEncryptTime.write(str('\n============================='))
+            transmitEncryptTime.write('\nTotal Time taken to send encrypted key to' + str(self.connection) + ': ')
+            transmitEncryptTime.write(str(transmit_total))
+            transmitEncryptTime.write(str('\n========================================'))
+            transmitEncryptTime.close()
+            transmitEncryptTime.close()
             
             print('Original secret key file size: ', os.path.getsize(secret_key))
             print ('Encrypted secret key file size: ', os.path.getsize(output_secret_key))
@@ -1085,6 +1101,15 @@ class ClientThread(threading.Thread):
             print('Original nbit key file size: ', os.path.getsize(nbit_key))
             print ('Encrypted nbit key file size: ', os.path.getsize(output_nbit_key))
             os.system("md5sum nbit.key")
+            
+            #(Transition delay)
+            delay_time = time.perf_counter()
+            
+            transitionDelay2 = open('delay.txt', 'a')
+            delay_time_total2 = round((delay_time - transmission_encrypt_stop), 3)
+            transitionDelay2.write('\nTransition Delay between sending of encrypted keys and end of thread code for' + str(self.connection) + ': ')
+            transitionDelay2.write(str(delay_time_total2))
+            transitionDelay2.close()
             
             lock.release()
 
