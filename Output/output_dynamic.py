@@ -1043,9 +1043,9 @@ def handshake(CLIENT1, CLIENT2, CLIENT3, CLIENT4, OPCODE1, OPCODE2, OPCODE3, POS
     own_sock.listen(1)
     connection, output_address = own_sock.accept()
     with connection:
+        sidh_start = time.perf_counter()
         print ("Connecting from", output_address)
 
-       
         logger.info('Starting SIDH commit exchange...\n')
         
         #Calculates Secret and Public Keys
@@ -1120,11 +1120,15 @@ def handshake(CLIENT1, CLIENT2, CLIENT3, CLIENT4, OPCODE1, OPCODE2, OPCODE3, POS
       
         sidh_time = time.perf_counter()
         time_elapsed = round((sidh_time - start), 3)
+        pairing_session = round((sidh_time - sidh_start), 3)
         print('Total time elapsed for Supersingular Isogeny Key Exchange:', time_elapsed, 's')
+        print('Total time elapsed for Supersingular Isogeny Key Exchange:', pairing_session, 's')
         f = open('timings.txt', 'a')
-        f.write('Total time elapsed for SIDH Key Exchange:')
+        f.write('\nTotal time elapsed for SIDH Key Exchange:')
         f.write(str(time_elapsed))
-        f.write("")
+        f.write('\nTotal time elapsed for SIDH Pairing session:')
+        f.write(str(pairing_session))
+        f.write("\n======")
         f.close
 
         # Start measuring final section of user input processing time
