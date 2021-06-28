@@ -66,7 +66,7 @@ def sidh():
         print(message)
     if (message == "finished"):
         sock_message.close()
-        handshake("client1", "client2", "client3", "client4", "opcode1", "opcode2", "opcode3", "postfix")
+        handshake("client1", "client2", "client3", "client4", "opcode1", "opcode2", "opcode3", "postfix", start)
     else:
         None
     
@@ -1030,7 +1030,7 @@ def encrypting(key, filename):
     return outputFile
 
 
-def handshake(CLIENT1, CLIENT2, CLIENT3, CLIENT4, OPCODE1, OPCODE2, OPCODE3, POSTFIX):
+def handshake(CLIENT1, CLIENT2, CLIENT3, CLIENT4, OPCODE1, OPCODE2, OPCODE3, POSTFIX, start):
    
     logger.info('Attempting Supersingular  Key Exchange with cloud\n')
     logger.info('Starting hunting and pecking to derive PE...\n')
