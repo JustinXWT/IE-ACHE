@@ -1030,14 +1030,16 @@ def handshake():
                 print("Printing nbit key...\n")
                 nbit_key = "nbit.key"
                 
-                encryptDecrypt_start = time.perf_counter()
+                encrypt_start = time.perf_counter()
                 # encrypt cloudkey
                 cloudkey = encrypting(SK, cloud_key)
                 print("This file", cloudkey, "is encrypted secret key\n")
                 #encrypt nbitkey
                 nbitkey = encrypting(SK, nbit_key)
                 print("This file", nbitkey, "is encrypted nbit key\n")
-
+                
+                encrypt_stop = time.perf_counter()
+                
                 #Open the cloudkey file and read its content
                 s = open(cloudkey, "rb")
                 keycontent = s.read(8192)
@@ -1058,14 +1060,21 @@ def handshake():
                 s.close()
                 t.close()
                 
-                encryptDecrypt_stop = time.perf_counter()
-                #writing time taken to generate shared key between keygen and client
-                KeyExchangeTiming = open('time.txt', 'a')
-                encryptDecrypt_time_total = round((encryptDecrypt_stop - encryptDecrypt_start), 3)
-                KeyExchangeTiming.write('\nTotal Time Taken to Encryption/Decryption of keys:')
-                KeyExchangeTiming.write(str(encryptDecrypt_time_total))
-                KeyExchangeTiming.write(str("\n============================================================"))
-                KeyExchangeTiming.close()   
+                #end of sending encrypted keys to peer
+                transmission_encrypt_stop = time.perf_counter()
+                
+                #writing time taken to encrypt and send encrypted keys
+                transmitEncryptTime = open('encryptTime.txt', 'a')
+                encrypt_time_total = round((encrypt_stop - encrypt_start), 3)
+                transmit_total = round((transmission_encrypt_stop - encrypt_stop), 3)
+                transmitEncryptTime.write('\nTotal Time Taken for Encryption of keys for' + str(self.connection) + ': ')
+                transmitEncryptTime.write(str(encrypt_time_total))
+                transmitEncryptTime.write(str('\n============================='))
+                transmitEncryptTime.write('\nTotal Time taken to send encrypted key to' + str(self.connection) + ': ')
+                transmitEncryptTime.write(str(transmit_total))
+                transmitEncryptTime.write(str('\n========================================'))
+                transmitEncryptTime.close()
+                transmitEncryptTime.close()
                 print('Original cloud file size: ', os.path.getsize(cloud_key))
                 print ('Encrypted cloud file size: ', os.path.getsize(cloudkey))
                 os.system("md5sum cloud.key")
